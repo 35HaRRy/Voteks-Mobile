@@ -3,8 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Voteks.iml" filepath="$PROJECT_DIR$/Voteks.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Voteks-Mobile.iml" filepath="$PROJECT_DIR$/Voteks-Mobile.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jsch-0.1.44/jsch-0.1.44.iml" filepath="$PROJECT_DIR$/jsch-0.1.44/jsch-0.1.44.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
 </project>
