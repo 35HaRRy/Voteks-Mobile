@@ -9,17 +9,26 @@
     <EditText
         android:id="@+id/txtCommand"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:text="Gönder"
-        android:onClick="btnSend_Click"/>
+        android:onClick="btnSend_Click"
+        android:layout_gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/txtResult"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lvTorrents"
+        android:layout_gravity="center_horizontal" />
 </LinearLayout>
