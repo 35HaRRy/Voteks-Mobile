@@ -6,6 +6,7 @@ import android.os.StrictMode;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.hayrihabip.voteks.data.Constants;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -19,7 +20,6 @@ import java.util.Properties;
 
 public class TorrentService extends IntentService {
     private Session session;
-    private ChannelExec channel;
 
     public TorrentService() {
         super("TorrentService");
@@ -57,7 +57,7 @@ public class TorrentService extends IntentService {
                 else if (Constants.ACTION_DOWNLOAD.equals(action))
                     handleActionDownload(intent.getStringExtra(Constants.EXTRA_DOWNLOAD));
             }  catch (Exception e) {
-                Log.v("SSH - Error: " + e.getMessage());
+                Log.v("SSH", "SSH - Error: " + e.getMessage());
             }
         }
     }
@@ -66,7 +66,7 @@ public class TorrentService extends IntentService {
         String result = ExecuteCommand("cd /media/SAMSUNG/Torrent && python asskick.py -s \"" + search + "\"");
 
         Intent serviceIntent = new Intent("FromTorrentService");
-        serviceIntent.putExtra(Constants.EXTRA_TORRENTS, result);
+        serviceIntent.putExtra(Constants.EXTRA_TORRENTRESULTS, result);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(serviceIntent);
     }
 
