@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hayrihabip.voteks">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.hayrihabip.voteks">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -18,12 +17,12 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".TorrentService"
-            android:exported="true" />
-        <service
-            android:name=".MyIntentService"
-            android:exported="false"></service>
+        <service android:name=".TorrentService" android:exported="true">
+            <intent-filter>
+                <action android:name="com.hayrihabip.voteks.action.SEARCH" />
+                <action android:name="com.hayrihabip.voteks.action.DOWNLOAD" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

@@ -14,6 +14,7 @@ import com.hayrihabip.voteks.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by hayri on 15.07.2016.
@@ -76,14 +77,23 @@ public class TorrentAdapter implements ListAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        try {
+            JSONObject torrent = mTorrents.getJSONObject(position);
 
-        View rowView = inflater.inflate(R.layout.torrent, parent, false);
-        TextView textView = (TextView) rowView.findViewById(R.id.label);
+            LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View rowView = inflater.inflate(R.layout.torrent, parent, false);
 
+            ((TextView)rowView.findViewById(R.id.tvTitle)).setText(torrent.getString("title"));
+            ((TextView)rowView.findViewById(R.id.tvSize)).setText(torrent.getString("size"));
+            ((TextView)rowView.findViewById(R.id.tvSeeders)).setText(torrent.getString("seeders"));
+            ((TextView)rowView.findViewById(R.id.tvLeechers)).setText(torrent.getString("leechers"));
 
+            return rowView;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        return rowView;
+        return null;
     }
 
     @Override
@@ -93,7 +103,7 @@ public class TorrentAdapter implements ListAdapter {
 
     @Override
     public int getViewTypeCount() {
-        return 0;
+        return 1;
     }
 
     @Override

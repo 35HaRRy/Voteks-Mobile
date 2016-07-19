@@ -24,6 +24,8 @@ public class TorrentService extends IntentService {
     public TorrentService() {
         super("TorrentService");
 
+        Log.v("Torrent", "Torrent started");
+
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
@@ -53,31 +55,37 @@ public class TorrentService extends IntentService {
 
             try {
                 if (Constants.ACTION_SEARCH.equals(action))
-                    handleActionSearch(intent.getStringExtra(Constants.EXTRA_SEARCH));
+                    handleActionSearch(intent.getExtras().get(Constants.EXTRA_SEARCH).toString());
                 else if (Constants.ACTION_DOWNLOAD.equals(action))
                     handleActionDownload(intent.getStringExtra(Constants.EXTRA_DOWNLOAD));
             }  catch (Exception e) {
-                Log.v("SSH", "SSH - Error: " + e.getMessage());
+                Log.e("SSH", "SSH - Error: " + e.getMessage());
             }
         }
     }
 
     private void handleActionSearch(String search) throws IOException, JSchException {
-        String result = ExecuteCommand("cd /media/SAMSUNG/Torrent && python asskick.py -s \"" + search + "\"");
+        Log.v("Torrent", "Torrent action: Search");
 
-        Intent serviceIntent = new Intent("FromTorrentService");
-        serviceIntent.putExtra(Constants.EXTRA_TORRENTRESULTS, result);
-        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(serviceIntent);
+        String result = ExecuteCommand("cd /media/SAMSUNG/Torrent && python asskick.py -s \"" + search + "\"").replace("u'", "'");
+
+        Intent intent = new Intent("FromTorrentService");
+        intent.putExtra(Constants.EXTRA_TORRENTRESULTS, result);
+        intent.putExtra(Constants.EXTRA_SEARCH, search);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
 
     private void handleActionDownload(String download) throws IOException, JSchException {
-        String result = ExecuteCommand("cd /media/SAMSUNG/Torrent && python asskick.py -d \"" + download + "\"");
+        Log.v("Torrent", "Torrent action: Download");
 
+        String result = ExecuteCommand("cd /media/SAMSUNG/Torrent && python asskick.py -d \"" + download + "\"");
     }
 
     private String ExecuteCommand(String command) throws IOException, JSchException {
         ChannelExec channel = (ChannelExec)session.openChannel("exec");
         channel.setCommand(command);
+
+        Log.v("Torrent", "Torrent SSH command: " + command);
 
         channel.setInputStream(null);
         channel.setErrStream(null);
