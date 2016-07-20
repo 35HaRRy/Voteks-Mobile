@@ -2,12 +2,6 @@ package com.hayrihabip.voteks;
 
 import com.hayrihabip.voteks.data.Constants;
 import com.hayrihabip.voteks.data.TorrentAdapter;
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.ChannelShell;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,20 +15,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Serializable;
-import java.util.Properties;
 
 public class MainActivity extends Activity {
     EditText txtCommand;
@@ -47,6 +33,11 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
 
         txtCommand = (EditText)findViewById(R.id.txtCommand);
         txtResult = (TextView)findViewById(R.id.txtResult);
@@ -106,7 +97,6 @@ public class MainActivity extends Activity {
                     MainActivity.this.startService(intent);
                 } catch (JSONException e) {
                     e.printStackTrace();
-
                     Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT);
                 }
             }
@@ -114,12 +104,19 @@ public class MainActivity extends Activity {
     }
 
     public void btnSend_Click(View v) {
-        Intent intent = new Intent(MainActivity.this, TorrentService.class);
+        /*Intent intent = new Intent(MainActivity.this, TorrentService.class);
         intent.setAction(Constants.ACTION_SEARCH);
         intent.putExtra(Constants.EXTRA_SEARCH, txtCommand.getText());
 
-        Log.v("Torrent", "Torrent search: " + txtCommand.getText());
+        MainActivity.this.startService(intent);*/
 
-        MainActivity.this.startService(intent);
+        try {
+            torrents = new JSONArray(TorrentService.Search(txtCommand.getText().toString()));
+            Log.v("Torrent", "Torrent search result jsonarray: " + torrents);
+            setTorrent();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT);
+        }
     }
 }
