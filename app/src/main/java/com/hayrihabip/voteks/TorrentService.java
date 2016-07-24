@@ -90,7 +90,7 @@ public class TorrentService extends IntentService {
         String result = "";
 
         try {
-            Document document = Jsoup.connect("https://kat.cr/usearch/" + filter + "/").get();
+            Document document = Jsoup.connect("http://kickasstorrents.website/usearch/" + filter + "/").get();
 
             if (document.select("[data-download]").size() > 0) {
                 List<Map<String, String>> torrents = new ArrayList<>();
