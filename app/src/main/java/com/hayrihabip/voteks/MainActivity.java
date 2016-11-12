@@ -89,11 +89,13 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 try {
+                    String downloadUrl = torrents.getJSONObject(position).getString("href").replace("/torrent/", "/download/");
+
                     Intent intent = new Intent(MainActivity.this, TorrentService.class);
                     intent.setAction(Constants.ACTION_DOWNLOAD);
-                    intent.putExtra(Constants.EXTRA_DOWNLOAD, torrents.getJSONObject(position).getString("href"));
+                    intent.putExtra(Constants.EXTRA_DOWNLOAD, downloadUrl);
 
-                    Log.v("Torrent", "Torrent downloading: " + torrents.getJSONObject(position).getString("href"));
+                    Log.v("Torrent", "Torrent downloading: " + downloadUrl);
                     MainActivity.this.startService(intent);
                 } catch (JSONException e) {
                     e.printStackTrace();

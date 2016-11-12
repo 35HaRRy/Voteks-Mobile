@@ -6,6 +6,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 import com.hayrihabip.voteks.data.Constants;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
@@ -21,11 +22,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class TorrentService extends IntentService {
     private Session session;
@@ -83,27 +89,56 @@ public class TorrentService extends IntentService {
     private void handleActionDownload(String download) throws IOException, JSchException {
         Log.v("Torrent", "Torrent action: Download");
 
-        String result = ExecuteCommand("cd /media/SAMSUNG/Torrent && python asskick.py -d \"" + download + "\"");
+        String result = ExecuteCommand("cd /media/PiStorage/Torrents && python torrent.py -d \"" + download + "\"");
+        Log.v("Torrent", "Torrent action result: " + result);
     }
 
     public static String Search(String filter) {
+        String domain = "http://extratorrent.cc";
         String result = "";
 
         try {
-            Document document = Jsoup.connect("http://kickasstorrents.website/usearch/" + filter + "/").get();
+            /* HttpsURLConnection con = (HttpsURLConnection)new URL(domain + "/search/?search=" + filter).openConnection();
 
-            if (document.select("[data-download]").size() > 0) {
+            StringBuilder inputStringBuilder = new StringBuilder();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+
+            String line = bufferedReader.readLine();
+            while(line != null){
+                inputStringBuilder.append(line);
+                line = bufferedReader.readLine();
+            }
+
+            Document document = Jsoup.parse(inputStringBuilder.toString());
+            Elements rows = document.select("#searchResult > tbody > tr");*/
+
+            Document document = Jsoup.connect(domain + "/search/?search=" + filter).get();
+            Elements rows = document.select("table.tl > tbody > tr");
+            if (rows.size() > 0) {
                 List<Map<String, String>> torrents = new ArrayList<>();
 
-                Elements rows = document.select("table.data tr:not(.firstr)");
-                for (Element row: rows) {
+                /*for (Element row: rows) {
+                    Elements link = row.select(".detLink");
+
                     Map<String, String> torrent = new HashMap<>();
-                    torrent.put("href", row.select("[title='Download torrent file']").attr("href"));
-                    torrent.put("size", row.select("td:eq(1)").text());
-                    torrent.put("title", row.select("a.cellMainLink").text());
+                    torrent.put("href", domain + link.attr("href"));
+                    torrent.put("title", link.text());
+                    torrent.put("description", row.select(".detDesc").text());
+                    torrent.put("seeders", row.select("td:eq(3)").text());
+                    torrent.put("leechers", row.select("td:eq(4)").text());
+
+                    torrents.add(torrent);
+                }*/
+                for (Element row: rows) {
+                    Elements link = row.select("td:eq(2) > a");
+
+                    Map<String, String> torrent = new HashMap<>();
+                    torrent.put("href", domain + link.attr("href").replace(".html", ".torrent"));
+                    torrent.put("title", link.text());
                     torrent.put("age", row.select("td:eq(3)").text());
-                    torrent.put("seeders", row.select("td:eq(4)").text());
-                    torrent.put("leechers", row.select("td:eq(5)").text());
+                    torrent.put("size", row.select("td:eq(4)").text());
+                    torrent.put("seeders", row.select("td:eq(5)").text());
+                    torrent.put("leechers", row.select("td:eq(6)").text());
 
                     torrents.add(torrent);
                 }

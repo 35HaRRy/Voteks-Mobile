@@ -4,30 +4,41 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/tvTitle"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="6"
-        android:textAlignment="center"
-        android:singleLine="false"
-        android:scrollIndicators="right" />
+        android:layout_weight="26"
+        android:scrollIndicators="right"
+        android:textAlignment="textStart"
+        android:maxLines="3"
+        android:minLines="2" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/tvSize"
-        android:layout_weight="3" />
+        android:layout_weight="4"
+        android:textAlignment="center"
+        android:lineSpacingExtra="8sp"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/tvSeeders"
-        android:layout_weight="2" />
+        android:layout_weight="2"
+        android:textAlignment="center"
+        android:lineSpacingExtra="8sp"
+        android:textSize="14sp" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/tvLeechers"
-        android:layout_weight="2" />
+        android:layout_weight="2"
+        android:textAlignment="center"
+        android:lineSpacingExtra="8sp"
+        android:textSize="14sp" />
 </LinearLayout>
